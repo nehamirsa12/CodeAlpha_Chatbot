@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura AI — Intelligent Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════
+   AURA AI — Luxury Refined Dark Interface
+   ════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --ink:       #0a0a0b;
+  --ink2:      #111114;
+  --ink3:      #18181c;
+  --ink4:      #222228;
+  --line:      #1e1e24;
+  --line2:     #2a2a33;
+  --muted:     #44444f;
+  --dim:       #6b6b7a;
+  --soft:      #9898aa;
+  --text:      #e8e8f0;
+  --bright:    #f5f5ff;
+  --gold:      #c8a96e;
+  --gold2:     #e2c48a;
+  --goldglow:  rgba(200,169,110,0.12);
+  --goldline:  rgba(200,169,110,0.25);
+  --green:     #4ade80;
+  --greenbg:   rgba(74,222,128,0.08);
+}
+
+html, body { height:100%; overflow:hidden; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── subtle grid texture ── */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(200,169,110,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,169,110,0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ════ TOPBAR ════ */
+.topbar {
+  height: 58px;
+  background: rgba(10,10,11,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #c8a96e 0%, #9b7a45 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--bright);
+  letter-spacing: 0.3px;
+}
+
+.brand-tagline {
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--line2);
+  background: var(--ink2);
+  font-size: 11.5px;
+  color: var(--soft);
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+
+.pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  position: relative;
+}
+
+.pulse::after {
+  content:'';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: var(--green);
+  opacity: 0.3;
+  animation: ripple 2s ease-out infinite;
+}
+
+@keyframes ripple {
+  0%   { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.top-btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--line2);
+  background: transparent;
+  font-size: 12px;
+  color: var(--soft);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+}
+
+.top-btn:hover {
+  border-color: var(--goldline);
+  color: var(--gold2);
+  background: var(--goldglow);
+}
+
+/* ════ LAYOUT ════ */
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* ════ SIDEBAR ════ */
+.sidebar {
+  width: 260px;
+  background: var(--ink2);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width 0.28s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+}
+
+.sidebar.hidden { width: 0; }
+
+.sb-pad {
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  min-width: 232px;
+}
+
+.new-chat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--goldline);
+  background: var(--goldglow);
+  color: var(--gold2);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+  width: 100%;
+}
+
+.new-chat:hover {
+  background: rgba(200,169,110,0.18);
+  border-color: var(--gold);
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--ink3);
+  transition: border 0.2s;
+}
+
+.search-field:focus-within { border-color: var(--line2); }
+
+.search-field svg { width:13px; height:13px; color:var(--muted); flex-shrink:0; }
+
+.search-field input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 12.5px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  width: 100%;
+}
+
+.search-field input::placeholder { color: var(--muted); }
+
+.sb-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 4px 2px 0;
+}
+
+.history {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history::-webkit-scrollbar { width: 2px; }
+.history::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
+
+.h-entry {
+  padding: 9px 11px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--dim);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.15s;
+}
+
+.h-entry svg { width:11px; height:11px; flex-shrink:0; opacity:0.4; }
+.h-entry:hover { background: var(--ink3); color: var(--soft); }
+.h-entry.active { background: var(--ink4); color: var(--text); }
+.h-entry.active svg { opacity: 0.7; }
+
+.no-history {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 28px 8px;
+  line-height: 1.7;
+  font-style: italic;
+}
+
+.sb-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 2px 0;
+}
+
+.user-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 11px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.user-block:hover { background: var(--ink3); }
+
+.user-av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #8b6932);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  font-family: 'Playfair Display', serif;
+  flex-shrink: 0;
+}
+
+.user-info-name { font-size: 12.5px; font-weight: 500; color: var(--text); }
+.user-info-sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+
+/* ════ CHAT MAIN ════ */
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* radial glow behind messages */
+.chat-main::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(200,169,110,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── CHAT MENU BAR ── */
+.chat-menubar {
+  padding: 0 24px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: rgba(10,10,11,0.6);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+  z-index: 2;
+  position: relative;
+}
+
+.menubar-left { display:flex; align-items:center; gap:8px; }
+
+.menu-toggle {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.menu-toggle:hover { background: var(--ink3); color: var(--soft); border-color: var(--line2); }
+.menu-toggle svg { width:14px; height:14px; }
+
+.model-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 1px solid var(--line2);
+  background: var(--ink2);
+  font-size: 11.5px;
+  color: var(--soft);
+  font-weight: 400;
+  cursor: default;
+}
+
+.model-badge .mb-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.8;
+}
+
+.menubar-right { display:flex; align-items:center; gap:6px; }
+
+/* ════ MESSAGES SCROLL ════ */
+.messages-scroll {
+  flex: 1;
+  overflow-y: auto;
+  z-index: 1;
+  position: relative;
+}
+
+.messages-scroll::-webkit-scrollbar { width: 4px; }
+.messages-scroll::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 4px; }
+
+.messages-inner {
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 36px 28px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ════ WELCOME ════ */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+  gap: 18px;
+  text-align: center;
+  padding: 20px;
+}
+
+.welcome-icon {
+  width: 64px; height: 64px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #c8a96e, #9b7a45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: white;
+  margin-bottom: 4px;
+  box-shadow: 0 8px 32px rgba(200,169,110,0.2);
+}
+
+.welcome h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--bright);
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.welcome h1 em {
+  font-style: italic;
+  color: var(--gold2);
+}
+
+.welcome-sub {
+  font-size: 14px;
+  color: var(--dim);
+  max-width: 420px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 8px;
+}
+
+.prompt-card {
+  padding: 15px 16px;
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--ink2);
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.prompt-card:hover {
+  border-color: var(--goldline);
+  background: var(--ink3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(200,169,110,0.08);
+}
+
+.pc-icon { font-size: 18px; margin-bottom: 8px; }
+.pc-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.pc-sub { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+
+/* ════ MESSAGE ROWS ════ */
+.msg-row {
+  display: flex;
+  gap: 14px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  animation: msgSlide 0.25s ease;
+}
+
+@keyframes msgSlide {
+  from { opacity:0; transform: translateY(8px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.msg-row:last-child { border-bottom: none; }
+.msg-row.user { flex-direction: row-reverse; }
+
+.msg-av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+  font-family: 'Playfair Display', serif;
+}
+
+.msg-av.ai {
+  background: linear-gradient(135deg, var(--gold), #9b7a45);
+  color: white;
+}
+
+.msg-av.user {
+  background: var(--ink4);
+  color: var(--soft);
+  border: 1px solid var(--line2);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.msg-content { flex:1; min-width:0; }
+
+.msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.msg-row.user .msg-meta { flex-direction: row-reverse; }
+
+.msg-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.msg-time {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.msg-nlp-tag {
+  font-size: 9.5px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--goldglow);
+  color: var(--gold);
+  border: 1px solid var(--goldline);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.msg-text {
+  font-size: 14px;
+  line-height: 1.82;
+  color: var(--soft);
+  font-weight: 300;
+}
+
+.msg-text strong { color: var(--text); font-weight: 500; }
+.msg-text em { font-style: italic; color: var(--dim); }
+
+.msg-text h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--bright);
+  margin: 14px 0 6px;
+  letter-spacing: 0.1px;
+}
+
+.msg-text code {
+  background: var(--ink3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--gold2);
+  border: 1px solid var(--line2);
+}
+
+.msg-text pre {
+  background: var(--ink2);
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  padding: 18px;
+  margin: 12px 0;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 12.5px;
+  color: #c8c8d8;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  position: relative;
+}
+
+.msg-text pre::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--gold), transparent);
+  border-radius: 10px 0 0 10px;
+}
+
+.msg-text ul, .msg-text ol { padding-left: 22px; margin: 6px 0; }
+.msg-text li { margin: 5px 0; color: var(--soft); }
+
+.msg-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 12px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.msg-row:hover .msg-actions { opacity: 1; }
+
+.msg-act {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: transparent;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+
+.msg-act:hover {
+  background: var(--ink3);
+  color: var(--soft);
+  border-color: var(--line2);
+}
+
+.msg-act svg { width:11px; height:11px; }
+
+/* ════ TYPING ════ */
+.typing-bar {
+  display: none;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 28px 8px;
+  gap: 14px;
+  align-items: center;
+}
+
+.typing-label {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: 300;
+  font-style: italic;
+}
+
+.typing-dots { display: flex; gap: 4px; align-items: center; }
+
+.td {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: tdpulse 1.3s ease-in-out infinite;
+}
+
+.td:nth-child(2) { animation-delay: 0.16s; }
+.td:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes tdpulse {
+  0%, 80%, 100% { transform: scale(1); opacity: 0.3; }
+  40%           { transform: scale(1.5); opacity: 1; }
+}
+
+/* ════ INPUT ZONE ════ */
+.input-zone {
+  flex-shrink: 0;
+  padding: 14px 28px 22px;
+  position: relative;
+  z-index: 2;
+}
+
+/* top fade */
+.input-zone::before {
+  content: '';
+  position: absolute;
+  top: -40px; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(transparent, var(--ink));
+  pointer-events: none;
+}
+
+.input-container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.input-card {
+  background: var(--ink2);
+  border: 1px solid var(--line2);
+  border-radius: 16px;
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-card:focus-within {
+  border-color: var(--goldline);
+  box-shadow: 0 0 0 3px rgba(200,169,110,0.06), 0 4px 24px rgba(0,0,0,0.3);
+}
+
+.input-card textarea {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  resize: none;
+  width: 100%;
+  min-height: 26px;
+  max-height: 150px;
+  line-height: 1.65;
+}
+
+.input-card textarea::placeholder { color: var(--muted); }
+
+.input-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-hints { display: flex; align-items: center; gap: 6px; }
+
+.hint-pill {
+  font-size: 10.5px;
+  color: var(--muted);
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-weight: 300;
+}
+
+.send-button {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, var(--gold), #a07838);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(200,169,110,0.2);
+}
+
+.send-button svg { width:14px; height:14px; }
+.send-button:hover { transform: scale(1.06); box-shadow: 0 4px 16px rgba(200,169,110,0.35); }
+.send-button:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.input-caption {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+  letter-spacing: 0.2px;
+  font-weight: 300;
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">Aura AI</div>
+      <div class="brand-tagline">Intelligent Assistant</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="status-pill">
+      <div class="pulse"></div>
+      NLP Engine Active
+    </div>
+    <button class="top-btn" onclick="newChat()">+ New Chat</button>
+  </div>
+</header>
+
+<!-- ══ MAIN LAYOUT ══ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-pad">
+      <button class="new-chat" onclick="newChat()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Conversation
+      </button>
+
+      <div class="search-field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input placeholder="Search history..." id="searchInput" oninput="filterHistory(this.value)">
+      </div>
+
+      <div class="sb-label">Conversation History</div>
+
+      <div class="history" id="historyList">
+        <div class="no-history">No conversations yet.<br>Begin a new chat.</div>
+      </div>
+
+      <div class="sb-divider"></div>
+
+      <div class="user-block">
+        <div class="user-av">N</div>
+        <div>
+          <div class="user-info-name">Neha Mirsa Sajid</div>
+          <div class="user-info-sub">Aura AI · Free Plan</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CHAT -->
+  <div class="chat-main">
+
+    <!-- sub menubar -->
+    <div class="chat-menubar">
+      <div class="menubar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="model-badge">
+          <div class="mb-dot"></div>
+          Aura NLP Engine · Retrieval-Based
+        </div>
+      </div>
+      <div class="menubar-right">
+        <!-- intentionally minimal -->
+      </div>
+    </div>
+
+    <!-- messages -->
+    <div class="messages-scroll" id="msgsScroll">
+      <div class="messages-inner" id="msgsInner"></div>
+    </div>
+
+    <!-- typing indicator -->
+    <div class="typing-bar" id="typingBar">
+      <div class="msg-av ai">A</div>
+      <div>
+        <div class="typing-label">Aura is thinking</div>
+        <div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+      </div>
+    </div>
+
+    <!-- input -->
+    <div class="input-zone">
+      <div class="input-container">
+        <div class="input-card">
+          <textarea id="msgInput" rows="1"
+            placeholder="Ask me anything — technology, science, coding, writing..."
+            onkeydown="onKey(event)"
+            oninput="grow(this)"></textarea>
+          <div class="input-footer">
+            <div class="input-hints">
+              <span class="hint-pill">Enter to send</span>
+              <span class="hint-pill">Shift+Enter for new line</span>
+            </div>
+            <button class="send-button" id="sendBtn" onclick="send()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="input-caption">
+          Aura AI · Retrieval-Based NLP · Instant responses · No internet required
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /chat-main -->
+
+</div><!-- /layout -->
+
+<!-- ════════════════════════════════════════
+     AURA AI — NLP KNOWLEDGE ENGINE
+     Retrieval-Based · Pattern-Trained
+     ════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ══ KNOWLEDGE BASE ══
+// Pattern-trained predefined responses for commercial use
+const KB = [
+
+  // ── Greetings ──
+  { k:['hello','hi','hey','good morning','good afternoon','good evening','howdy','greetings'],
+    r:() => ['Hello! How can I assist you today?','Hey there — what can I help you with?',"Hi! I'm Aura. Ask me anything."][Math.floor(Math.random()*3)] },
+
+  { k:['bye','goodbye','see you','take care','good night','farewell'],
+    r:() => ['Goodbye — feel free to return anytime.','See you later! 👋','Take care!'][Math.floor(Math.random()*3)] },
+
+  { k:['thanks','thank you','thx','appreciate','thank'],
+    r:() => ["You're welcome!","Happy to help.",'Anytime — that\'s what I\'m here for.'][Math.floor(Math.random()*3)] },
+
+  { k:['who are you','what are you','your name','are you ai','about you','introduce yourself'],
+    r:`I'm **Aura**, an intelligent AI assistant powered by a **Retrieval-Based NLP engine**.\n\nI'm trained to help you across a wide range of topics:\n\n• 💻 **Technology** — AI, Machine Learning, Cloud Computing, Java, Python, SQL, Cybersecurity\n• 🔬 **Science** — Physics, Biology, Chemistry, Astronomy\n• 📐 **Mathematics** — Algebra, Geometry, Calculus, Statistics\n• 📚 **History & Geography** — World events, countries, famous figures\n• ✍️ **Writing** — Professional emails, essays, reports\n\nWhat would you like to explore today?` },
+
+  { k:['what can you do','capabilities','help me','how do you work','features'],
+    r:`**What I can help you with:**\n\n**Technology & Programming**\n• Artificial Intelligence & Machine Learning\n• Cloud Computing (AWS, Azure, GCP)\n• Java, Python, JavaScript, SQL, C++\n• Cybersecurity, SQL Injection, Encryption\n• Blockchain & Web Technologies\n\n**Science**\n• Physics, Biology, Chemistry, Astronomy\n\n**Mathematics**\n• Algebra, Pi, Fibonacci, Pythagoras\n\n**History & Geography**\n• World Wars, famous scientists, countries\n\n**Writing**\n• Professional emails, essays, cover letters\n\nJust ask — I'll give you a detailed, accurate answer.` },
+
+  // ── AI & ML ──
+  { k:['artificial intelligence','what is ai','explain ai','how ai works','define ai'],
+    r:`## Artificial Intelligence\n\n**AI** is the simulation of human intelligence in machines — enabling them to learn, reason, and solve problems.\n\n**Core branches:**\n• **Machine Learning** — systems that learn from data\n• **Natural Language Processing** — understanding human language\n• **Computer Vision** — recognizing images and video\n• **Reinforcement Learning** — learning through rewards\n\n**Types of AI:**\n• Narrow AI — specific tasks (Siri, chess engines, spam filters)\n• General AI — human-level reasoning (theoretical)\n• Super AI — beyond human capability (future concept)\n\n**Learning pipeline:**\n\`\`\`\nData Collection → Preprocessing → Model Training\n→ Evaluation → Deployment → Continuous Improvement\n\`\`\`\n\n**Real-world examples:** ChatGPT, self-driving cars, Netflix recommendations, medical diagnosis, face recognition.` },
+
+  { k:['machine learning','what is ml','deep learning','neural network','supervised learning','unsupervised'],
+    r:`## Machine Learning\n\n**ML** is a subset of AI where systems learn from data without being explicitly programmed.\n\n**Three main types:**\n\n**1. Supervised Learning**\n• Trains on labeled input → output pairs\n• Examples: spam detection, image classification, price prediction\n\n**2. Unsupervised Learning**\n• Finds hidden patterns in unlabeled data\n• Examples: customer segmentation, anomaly detection\n\n**3. Reinforcement Learning**\n• Agent learns through rewards and penalties\n• Examples: AlphaGo, game-playing AI, robotics\n\n**Deep Learning** uses multi-layer neural networks:\n\`\`\`\nInput Layer → [Hidden Layers] → Output Layer\n   (data)     (feature extract)   (prediction)\n\`\`\`\nPowers GPT models, image recognition, voice assistants.\n\n**ML Pipeline:**\n\`\`\`\nCollect → Clean → Train → Test → Deploy → Monitor\n\`\`\`` },
+
+  { k:['natural language processing','nlp','what is nlp','text analysis'],
+    r:`## Natural Language Processing (NLP)\n\n**NLP** enables computers to understand, interpret, and generate human language.\n\n**Core tasks:**\n• **Tokenization** — splitting text into words/sentences\n• **Sentiment Analysis** — detecting positive/negative tone\n• **Named Entity Recognition** — finding names, places, dates\n• **Machine Translation** — Google Translate, DeepL\n• **Question Answering** — what this chatbot uses!\n\n**Two chatbot approaches:**\n\n**Retrieval-Based (this chatbot)**\n• Matches input to predefined patterns\n• Instant, accurate, consistent\n• Ideal for commercial use\n\n**Generative (ChatGPT)**\n• Generates responses word-by-word using Transformers\n• Flexible but requires massive computing power` },
+
+  // ── Cloud ──
+  { k:['cloud computing','what is cloud','explain cloud','iaas paas saas'],
+    r:`## Cloud Computing\n\nDelivering computing services — servers, storage, databases, software — over the internet.\n\n**Three service models:**\n\n**IaaS — Infrastructure as a Service**\n• Virtual machines, storage, networking\n• You manage: OS, middleware, applications\n• Examples: AWS EC2, Azure VMs\n\n**PaaS — Platform as a Service**\n• Development platform and runtime\n• You manage: applications and data only\n• Examples: Heroku, Google App Engine\n\n**SaaS — Software as a Service**\n• Complete apps delivered over the internet\n• You manage: nothing (just use the app)\n• Examples: Gmail, Microsoft 365, Dropbox\n\n**Key benefits:**\n• Access from anywhere · Pay-as-you-use · Instant scalability\n• Automatic backups · No upfront hardware cost\n\n**Top providers:** AWS (32%) · Microsoft Azure (22%) · Google Cloud (11%)` },
+
+  { k:['aws','amazon web services','azure','microsoft azure','google cloud','gcp'],
+    r:`## Cloud Provider Comparison\n\n**Amazon Web Services (AWS)**\n• Market leader — ~32% market share\n• 200+ services, broadest catalogue\n• Key: EC2, S3, Lambda, RDS, CloudFront\n• Best for: startups to enterprise\n\n**Microsoft Azure**\n• ~22% market share, fastest growing\n• Deep Microsoft ecosystem integration\n• Key: Azure VMs, Blob Storage, Azure AI\n• Best for: enterprises using Microsoft stack\n\n**Google Cloud Platform (GCP)**\n• ~11% market share\n• Strongest AI/ML services\n• Key: BigQuery, GKE, Vertex AI\n• Best for: data analytics, machine learning\n\n**Common services across providers:**\n\`\`\`\nCompute:    EC2  /  Azure VMs  /  Compute Engine\nStorage:    S3   /  Blob        /  Cloud Storage\nDatabase:   RDS  /  Azure SQL  /  Cloud SQL\nAI/ML:      SageMaker / Azure AI / Vertex AI\nServerless: Lambda / Functions  / Cloud Functions\n\`\`\`` },
+
+  // ── Programming ──
+  { k:['java','what is java','java programming','java language'],
+    r:`## Java\n\nPlatform-independent, object-oriented language created in **1995** by James Gosling.\n\n**Core principles:**\n• **Write Once, Run Anywhere (WORA)** — JVM portability\n• Strongly typed — catches bugs at compile time\n• Automatic garbage collection\n• Multithreading support\n\n**Four OOP pillars:**\n• Encapsulation · Inheritance · Polymorphism · Abstraction\n\n**Example:**\n\`\`\`java\npublic class Greeting {\n    public static void main(String[] args) {\n        String name = "Aura";\n        System.out.println("Hello, " + name + "!");\n    }\n}\n\`\`\`\n\n**Popular frameworks:**\n• Spring Boot — enterprise web APIs\n• Hibernate — database ORM\n• Maven / Gradle — build tools\n\n**Used for:** Android apps, banking systems, enterprise software, cloud applications.` },
+
+  { k:['python','what is python','python programming','python language'],
+    r:`## Python\n\nHigh-level, readable language by Guido van Rossum (**1991**).\n\n**Why Python?**\n• Closest syntax to plain English\n• #1 language for AI and data science\n• Enormous library ecosystem\n• Cross-platform compatibility\n\n**Example:**\n\`\`\`python\n# Clean, readable syntax\ndef greet(name, greeting="Hello"):\n    return f"{greeting}, {name}!"\n\n# List comprehension\nsquares = [x**2 for x in range(1, 6)]\nprint(squares)  # [1, 4, 9, 16, 25]\n\n# Class\nclass Animal:\n    def __init__(self, name):\n        self.name = name\n    def speak(self):\n        return f"{self.name} speaks!"\n\`\`\`\n\n**Key libraries:**\n• NumPy / Pandas — data analysis\n• TensorFlow / PyTorch — deep learning\n• Django / Flask — web development\n• Matplotlib — data visualization` },
+
+  { k:['javascript','what is javascript','js programming','nodejs'],
+    r:`## JavaScript\n\nThe language of the web — brings interactivity to websites.\n\n**Key features:**\n• Runs directly in browsers\n• Asynchronous and event-driven\n• Dynamic typing\n• Full-stack with Node.js\n\n**Modern JS (ES6+):**\n\`\`\`javascript\n// Arrow functions\nconst greet = (name) => \`Hello, \${name}!\`;\n\n// Destructuring\nconst { title, version } = config;\n\n// Async / Await\nasync function fetchData(url) {\n    const res = await fetch(url);\n    return await res.json();\n}\n\n// Array methods\nconst nums = [1,2,3,4,5];\nconst doubled = nums.map(n => n * 2);    // [2,4,6,8,10]\nconst evens   = nums.filter(n => n%2===0); // [2,4]\n\`\`\`\n\n**Ecosystem:**\n• React, Vue, Angular — front-end frameworks\n• Node.js, Express — server-side\n• Next.js — full-stack React` },
+
+  { k:['sql','structured query language','database queries','mysql','postgresql','sqlite'],
+    r:`## SQL\n\nStandard language for managing relational databases.\n\n\`\`\`sql\n-- Create table\nCREATE TABLE employees (\n    id         INT PRIMARY KEY AUTO_INCREMENT,\n    name       VARCHAR(100) NOT NULL,\n    department VARCHAR(50),\n    salary     DECIMAL(10,2)\n);\n\n-- Insert\nINSERT INTO employees (name, department, salary)\nVALUES ('Alice', 'Engineering', 95000);\n\n-- Query with filter\nSELECT name, salary\nFROM employees\nWHERE salary > 80000\nORDER BY salary DESC;\n\n-- Join two tables\nSELECT e.name, d.dept_name\nFROM employees e\nJOIN departments d ON e.dept_id = d.id;\n\n-- Aggregate\nSELECT department,\n       COUNT(*) AS total,\n       AVG(salary) AS avg_pay\nFROM employees\nGROUP BY department;\n\`\`\`` },
+
+  // ── Security ──
+  { k:['sql injection','sqli','what is sql injection','sql attack','web vulnerability'],
+    r:`## SQL Injection\n\nA critical web vulnerability that lets attackers manipulate database queries through user inputs.\n\n**The attack:**\n\`\`\`sql\n-- Normal login query:\nSELECT * FROM users\nWHERE username='alice' AND password='pass';\n\n-- Attacker enters: ' OR '1'='1\n-- Query becomes:\nSELECT * FROM users\nWHERE username='' OR '1'='1'; -- always TRUE!\n-- Result: full database access, bypassed login\n\`\`\`\n\n**Prevention — Prepared Statements (best method):**\n\`\`\`java\n// NEVER do this:\nString q = "SELECT * FROM users WHERE user='" + input + "'";\n\n// ALWAYS do this:\nPreparedStatement stmt = conn.prepareStatement(\n    "SELECT * FROM users WHERE username=? AND password=?"\n);\nstmt.setString(1, username);\nstmt.setString(2, password);\n\`\`\`\n\n**Additional defences:**\n• Input validation and whitelisting\n• AES-256 encryption for sensitive data\n• Principle of least privilege (DB permissions)\n• Web Application Firewall (WAF)` },
+
+  { k:['encryption','aes','aes-256','aes 256','what is encryption','cryptography','sha256','hashing'],
+    r:`## Encryption & Cryptography\n\n**Encryption** converts readable data (plaintext) into ciphertext using mathematical algorithms.\n\n**AES-256:**\n• 256-bit key — 2²⁵⁶ possible combinations\n• Used by banks, governments, militaries worldwide\n• Symmetric encryption (same key encrypts & decrypts)\n\n**Java AES-256:**\n\`\`\`java\nCipher cipher = Cipher.getInstance("AES/GCM/NoPadding");\nSecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");\ncipher.init(Cipher.ENCRYPT_MODE, keySpec);\nbyte[] cipherText = cipher.doFinal(plainText.getBytes());\n\`\`\`\n\n**SHA-256 hashing (for passwords):**\n\`\`\`\n"password123" → SHA-256 → ef92b778bafe771e89...\n"password124" → SHA-256 → 72e5bbd5c3d6e90e7f...\n\`\`\`\nOne character difference → completely different hash. This is the **avalanche effect**.\n\n**Encryption types:**\n• Symmetric (AES) — fast, bulk data\n• Asymmetric (RSA) — key pairs, data exchange\n• Hashing (SHA-256) — one-way, passwords` },
+
+  { k:['cybersecurity','cyber security','information security','network security','security'],
+    r:`## Cybersecurity\n\nProtecting systems, networks, and data from digital attacks.\n\n**The CIA Triad:**\n\`\`\`\nC — Confidentiality  (data stays private)\nI — Integrity        (data is unmodified)\nA — Availability     (systems stay online)\n\`\`\`\n\n**Common threats:**\n• **Malware** — viruses, ransomware, trojans\n• **Phishing** — fake emails to steal credentials\n• **SQL Injection** — database manipulation\n• **DDoS** — overwhelming servers with traffic\n• **Man-in-the-Middle** — intercepting communications\n\n**Defence strategies:**\n• Multi-Factor Authentication (MFA)\n• AES-256 encryption everywhere\n• Regular security patching\n• Zero Trust Architecture\n• Employee security training\n• Intrusion Detection Systems (IDS)` },
+
+  { k:['blockchain','what is blockchain','bitcoin','ethereum','cryptocurrency','smart contract'],
+    r:`## Blockchain\n\nDecentralized, immutable ledger recording transactions across many computers.\n\n**Block structure:**\n\`\`\`\n┌─────────────────────────────────┐\n│ Block #1042                     │\n│ Timestamp:  2026-03-13          │\n│ Prev Hash:  0x3f9a2b8c...       │\n│ Transactions: [A→B: 0.5 BTC]   │\n│ Nonce:      47291834            │\n│ This Hash:  0x8b2c4d6e...       │\n└─────────────────────────────────┘\n        ↓ chained to next block\n\`\`\`\n\n**Key properties:**\n• **Immutable** — altering one block breaks the chain\n• **Decentralized** — no single point of failure\n• **Transparent** — anyone can verify transactions\n• **Trustless** — no intermediary required\n\n**Applications:**\n• Cryptocurrency (Bitcoin, Ethereum)\n• Smart contracts (self-executing code)\n• Supply chain tracking\n• Digital identity & KYC\n• Healthcare records` },
+
+  // ── Science ──
+  { k:['gravity','what is gravity','gravitational force','newton law'],
+    r:`## Gravity\n\nThe force attracting objects with mass toward each other.\n\n**Newton's Law of Universal Gravitation (1687):**\n\`\`\`\n        G × m₁ × m₂\nF  =  ─────────────────\n             r²\n\nF  = gravitational force (N)\nG  = 6.674 × 10⁻¹¹ N·m²/kg²\nm₁,m₂ = masses (kg)\nr  = distance between centres (m)\n\`\`\`\n\n**Gravitational acceleration:**\n\`\`\`\nEarth:    9.8  m/s²  (baseline)\nMoon:     1.6  m/s²  (1/6 of Earth)\nMars:     3.7  m/s²\nJupiter: 24.8  m/s²  (2.5× Earth)\n\`\`\`\n\n**Einstein's view:** Gravity is the *curvature of spacetime* caused by mass and energy — not merely a force.\n\n**Effects:** Orbital motion · ocean tides · black holes · GPS time corrections` },
+
+  { k:['dna','what is dna','genetics','gene','chromosome','double helix'],
+    r:`## DNA\n\nThe molecule carrying genetic instructions for all living organisms.\n\n**Structure:**\n• Double helix — two twisted strands\n• 4 bases: **A**denine–**T**hymine · **G**uanine–**C**ytosine\n• Discovered by Watson & Crick, **1953**\n\n**Human genome facts:**\n\`\`\`\nBase pairs:    ~3 billion\nGenes:         ~20,000–25,000\nChromosomes:   23 pairs (46 total)\nDNA per cell:  2 metres uncoiled!\nAll cells combined: 67 billion km\n\`\`\`\n\n**Genetic similarities:**\n• All humans share **99.9%** DNA\n• Human–chimpanzee: **98.7%** shared\n• Human–banana: **~60%** shared 🍌\n\n**How genes work:**\n\`\`\`\nDNA → (transcription) → mRNA\nmRNA → (translation) → Protein\nProtein → carries out body functions\n\`\`\`` },
+
+  { k:['photosynthesis','how plants make food','chlorophyll','chloroplast'],
+    r:`## Photosynthesis\n\nPlants convert sunlight, water, and CO₂ into glucose and oxygen.\n\n**The equation:**\n\`\`\`\n6CO₂ + 6H₂O + Light  →  C₆H₁₂O₆ + 6O₂\n\nCarbon   Water  Sunlight   Glucose   Oxygen\nDioxide\n\`\`\`\n\n**Location:** Chloroplasts — organelles containing green **chlorophyll** pigment.\n\n**Two stages:**\n\n**Stage 1 — Light Reactions (Thylakoid)**\n• Capture sunlight energy\n• Split water → release O₂\n• Produce ATP and NADPH\n\n**Stage 2 — Calvin Cycle (Stroma)**\n• Use ATP and NADPH\n• Convert CO₂ → glucose\n\n**Why it matters:**\n• Produces all oxygen in Earth's atmosphere\n• Foundation of every food chain\n• Removes ~120 billion tonnes of CO₂ annually` },
+
+  { k:['speed of light','how fast is light','light speed','c constant'],
+    r:`## Speed of Light\n\n**c = 299,792,458 m/s** (≈ 3 × 10⁸ m/s)\n\nThe universal speed limit — nothing with mass can reach it.\n\n**Light travel times:**\n\`\`\`\nEarth circumference:     0.13 seconds\nEarth → Moon:            1.3 seconds\nEarth → Sun:             8 min 20 sec\nEarth → Mars (average):  12.5 minutes\nEarth → nearest star:    4.24 YEARS\nAcross the Milky Way:    100,000 YEARS\n\`\`\`\n\n**Einstein's E = mc²:**\n\`\`\`\nE = energy  (Joules)\nm = mass    (kg)\nc = 299,792,458 m/s\n\n1 gram of matter = 9 × 10¹³ Joules\n                 = ~21 kilotons of TNT\n\`\`\`\n\n**Relativistic effects at high speed:**\n• Time dilation — moving clocks tick slower\n• Length contraction — objects shorten\n• GPS satellites require daily corrections for this!` },
+
+  { k:['solar system','planets','how many planets','planet facts'],
+    r:`## Solar System\n\n**8 planets** orbit our Sun:\n\n**Inner — Terrestrial (rocky):**\n• ☿ Mercury — smallest, -180°C to +430°C extremes\n• ♀ Venus — hottest (462°C), spins backwards\n• ♁ Earth — only known life, 71% ocean\n• ♂ Mars — Red Planet, tallest volcano in solar system\n\n**Outer — Gas & Ice Giants:**\n• ♃ Jupiter — largest, Great Red Spot storm 400+ years\n• ♄ Saturn — ring system, least dense planet\n• ⛢ Uranus — rotates on its side (98° axial tilt!)\n• ♆ Neptune — fastest winds at 2,100 km/h\n\n**The Sun:** contains **99.86%** of all solar system mass.\n\nPluto reclassified as dwarf planet in 2006.` },
+
+  // ── Mathematics ──
+  { k:['pi','what is pi','value of pi','3.14','circle formula'],
+    r:`## Pi (π)\n\n**π = 3.14159265358979...**\n\nThe ratio of any circle's circumference to its diameter — constant throughout the universe.\n\n**Properties:** Irrational · Transcendental · Computed to 100 trillion digits!\n\n**Essential formulas:**\n\`\`\`\nCircumference    = 2πr\nArea of circle   = πr²\nVolume, sphere   = (4/3)πr³\nSurface, sphere  = 4πr²\nVolume, cylinder = πr²h\n\`\`\`\n\n**Worked example** (r = 7 cm):\n\`\`\`\nArea          = π × 49 = 153.94 cm²\nCircumference = 2 × π × 7 = 43.98 cm\n\`\`\`\n\n**Pi Day = March 14 (3/14)** — also Einstein's birthday!\n\nOnly **39 digits** of π are needed to calculate the universe's circumference to within 1 hydrogen atom.` },
+
+  { k:['pythagoras','pythagorean theorem','right triangle','hypotenuse'],
+    r:`## Pythagorean Theorem\n\n**a² + b² = c²**\n\n\`\`\`\n         |\\\n     b   |   \\ c (hypotenuse)\n         |_____\\\n            a\n     right angle at bottom-left\n\`\`\`\n\n**Finding the hypotenuse:**\n\`\`\`\na = 3, b = 4:\nc² = 9 + 16 = 25\nc  = 5  ✓   (the famous 3-4-5 triple)\n\`\`\`\n\n**Finding a missing leg:**\n\`\`\`\nc = 13, a = 5:\nb² = 169 - 25 = 144\nb  = 12  ✓   (5-12-13 triple)\n\`\`\`\n\n**Common Pythagorean triples:**\n\`\`\`\n(3, 4, 5) · (5, 12, 13) · (8, 15, 17) · (7, 24, 25)\n\`\`\`\n\n**Used in:** architecture, GPS, engineering, computer graphics, game physics.` },
+
+  { k:['fibonacci','fibonacci sequence','golden ratio'],
+    r:`## Fibonacci & The Golden Ratio\n\n**The sequence:**\n\`\`\`\n0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144...\nRule: F(n) = F(n-1) + F(n-2)\n\`\`\`\n\n**In code:**\n\`\`\`python\ndef fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        print(a, end=' ')\n        a, b = b, a + b\n\`\`\`\n\`\`\`java\npublic static long fib(int n) {\n    if (n <= 1) return n;\n    long a = 0, b = 1;\n    for (int i = 2; i <= n; i++) {\n        long c = a + b; a = b; b = c;\n    }\n    return b;\n}\n\`\`\`\n\n**Golden Ratio φ = 1.6180339...** — ratio of consecutive Fibonacci numbers converges to φ.\n\n**Found everywhere in nature:** 🌸 flower petals · 🌻 sunflower seeds · 🐚 nautilus shell · 🍍 pineapple scales` },
+
+  { k:['algebra','solve equation','quadratic','linear equation'],
+    r:`## Algebra\n\n**Linear equations:**\n\`\`\`\n2x + 5 = 15\n2x    = 10\nx     = 5  ✓\n\`\`\`\n\n**Quadratic formula:**\n\`\`\`\nax² + bx + c = 0\n\n        -b ± √(b² - 4ac)\nx  =  ──────────────────\n               2a\n\`\`\`\n\n**Example:** x² - 5x + 6 = 0\n\`\`\`\na=1, b=-5, c=6\n\nx = (5 ± √(25 - 24)) / 2\nx = (5 ± 1) / 2\nx = 3  or  x = 2  ✓\n\`\`\`\n\n**Key identities:**\n\`\`\`\na(b+c) = ab + ac          (distributive)\n(a+b)² = a² + 2ab + b²    (perfect square)\n(a+b)(a-b) = a² - b²      (difference of squares)\n\`\`\`` },
+
+  // ── History ──
+  { k:['world war 2','world war ii','ww2','second world war','wwii'],
+    r:`## World War II (1939–1945)\n\nThe deadliest conflict in history — **70–85 million deaths** across 30+ nations.\n\n**Timeline:**\n\`\`\`\n1939 Sep  Germany invades Poland → war begins\n1940      Fall of France · Battle of Britain\n1941 Dec  Pearl Harbor → USA enters\n1943 Feb  Stalingrad — the turning point\n1944 Jun  D-Day Normandy — largest seaborne invasion\n1945 May  Germany surrenders (V-E Day)\n1945 Aug  Atomic bombs: Hiroshima & Nagasaki\n1945 Sep  Japan surrenders — war ends\n\`\`\`\n\n**Sides:**\n• **Allies:** USA · UK · USSR · France\n• **Axis:** Germany · Italy · Japan\n\n**Legacy:**\n• United Nations founded (1945)\n• Cold War begins between USA and USSR\n• Holocaust — 6 million Jews systematically killed\n• Nuclear age and arms race begins` },
+
+  { k:['albert einstein','einstein','theory of relativity','e=mc2','physicist'],
+    r:`## Albert Einstein (1879–1955)\n\nWidely considered the greatest physicist of the 20th century.\n\n**Special Relativity (1905):**\n\`\`\`\nE = mc²\n• Energy and mass are equivalent\n• Time dilation — moving clocks tick slower\n• Nothing can exceed the speed of light\n\`\`\`\n\n**General Relativity (1915):**\n• Gravity = curvature of spacetime by mass\n• Predicted gravitational waves ✓ (confirmed 2015)\n• Predicted black holes ✓ (imaged 2019)\n• GPS satellites need daily relativistic corrections!\n\n**Nobel Prize in Physics — 1921**\n(Photoelectric effect, not relativity)\n\n**Life:**\n• Born Ulm, Germany · failed Swiss Polytechnic entrance exam\n• Worked as patent clerk while developing relativity\n• Fled Nazi Germany 1933 → Princeton, USA\n• Warned Roosevelt about nuclear weapons potential` },
+
+  // ── Geography ──
+  { k:['mount everest','highest mountain','himalaya','tallest peak'],
+    r:`## Mount Everest\n\n**Earth's highest peak above sea level.**\n\n\`\`\`\nHeight:    8,848.86 m  (29,031.7 ft) — updated 2020\nLocation:  Nepal – Tibet (China) border\nRange:     Himalayas\nNepalese:  Sagarmatha  ("Forehead of the Sky")\nTibetan:   Chomolungma ("Goddess Mother of the World")\n\`\`\`\n\n**Summit conditions:**\n\`\`\`\nTemperature:  down to -60°C in winter\nWind:         up to 280 km/h\nOxygen:       only 33% of sea-level concentration\nDeath Zone:   above 8,000 m (body cannot acclimatize)\n\`\`\`\n\n**Climbing facts:**\n• **First summit:** May 29, 1953 — Sir Edmund Hillary & Tenzing Norgay\n• **6,000+** successful summits · **~300** fatalities\n• Gets ~4 mm taller every year (tectonic uplift)` },
+
+  { k:['india','capital of india','new delhi','about india'],
+    r:`## India 🇮🇳\n\nThe world's most populous country and largest democracy.\n\n\`\`\`\nCapital:      New Delhi\nLargest city: Mumbai (financial hub)\nPopulation:   ~1.44 billion  (#1 worldwide, 2024)\nArea:         3.29 million km²  (#7 largest)\nIndependence: August 15, 1947\nGovernment:   Federal parliamentary republic\nCurrency:     Indian Rupee (₹)\n\`\`\`\n\n**Economy:**\n• 5th largest nominal GDP\n• 3rd largest by purchasing power parity\n• Bengaluru = "Silicon Valley of Asia"\n\n**Geography:** Himalayas · Thar Desert · 7,500 km coastline\n\n**Culture:**\n• Birthplace of Hinduism, Buddhism, Jainism, Sikhism\n• 22 official scheduled languages\n• World's largest film industry by output (Bollywood)` },
+
+  // ── Writing ──
+  { k:['write email','professional email','email template','formal email','business email'],
+    r:`## Professional Email\n\n**Structure:**\n\`\`\`\nTo:       recipient@company.com\nSubject:  [Specific · Clear · ≤50 characters]\n\nDear Ms./Mr. [Last Name],\n\nI hope this email finds you well. I am writing\nto [state your purpose in the first sentence].\n\n[Body: 2-3 concise paragraphs or bullet points]\n\n[Clear call to action or next step]\n\nThank you for your time and consideration.\n\nBest regards,\nNeha Mirsa Sajid\nCloud Computing Intern · CodeAlpha\n\`\`\`\n\n**Professional tips:**\n• Reply within 24 hours\n• One topic per email\n• Keep subject line under 50 characters\n• Use bullet points for lists\n• Proofread — always` },
+
+  { k:['write essay','essay structure','essay writing','academic writing'],
+    r:`## Essay Writing Structure\n\n**5-Paragraph Framework:**\n\n**1. Introduction**\n• Hook — surprising fact, bold claim, or question\n• Background context (2–3 sentences)\n• Thesis — your precise main argument (last sentence)\n\n**2–4. Body Paragraphs** (one point each)\n• Topic sentence — what this paragraph proves\n• Evidence — data, quotes, examples\n• Analysis — explain *how* evidence supports thesis\n• Transition — bridge to next paragraph\n\n**5. Conclusion**\n• Restate thesis (different words — never copy)\n• Summarise three main points\n• Broader significance or call to action\n\n**Thesis quality:**\n\`\`\`\n❌ Weak:   "AI is changing things."\n✅ Strong:  "AI is revolutionising healthcare by enabling\n            earlier disease detection, personalised\n            treatment plans, and drug discovery at scale."\n\`\`\`` },
+
+  // ── Climate / Environment ──
+  { k:['climate change','global warming','greenhouse effect','carbon dioxide','environment'],
+    r:`## Climate Change\n\nLong-term shifts in global temperature and weather patterns caused primarily by human activity.\n\n**The Greenhouse Effect:**\n\`\`\`\nSun's energy reaches Earth\n  ↓\nEarth absorbs & re-emits as infrared heat\n  ↓\nGreenhouse gases (CO₂, CH₄, N₂O) trap heat\n  ↓\nPlanet warms\n\`\`\`\n\n**Measured impacts:**\n• +1.1°C global temperature rise since pre-industrial\n• Sea levels rising **3.3 mm/year**\n• Arctic sea ice declining **13% per decade**\n• More frequent extreme weather events\n\n**Solutions:**\n• Renewable energy (solar, wind, hydro, nuclear)\n• Electric vehicles replacing combustion engines\n• Reforestation and stopping deforestation\n• Carbon capture technology\n• Energy-efficient buildings and industry` },
+
+];
+
+// ══ NLP RETRIEVAL ENGINE ══
+function retrieve(input) {
+  const low = input.toLowerCase().trim();
+  let bestEntry = null, bestScore = 0;
+
+  for (const entry of KB) {
+    for (const kw of entry.k) {
+      if (low.includes(kw)) {
+        const score =
+          kw.split(' ').length * 2 +
+          (low === kw ? 10 : 0) +
+          (low.startsWith(kw) ? 3 : 0);
+        if (score > bestScore) { bestScore = score; bestEntry = entry; }
+      }
+    }
+  }
+
+  if (bestEntry) {
+    const r = bestEntry.r;
+    return { text: typeof r === 'function' ? r() : r, matched: true };
+  }
+
+  return { text: fallback(input), matched: false };
+}
+
+function fallback(input) {
+  const low = input.toLowerCase();
+
+  if (/\b(hello|hi|hey)\b/.test(low))  return "Hello! How can I assist you today?";
+  if (/\b(thanks|thank)\b/.test(low))  return "You're welcome! 😊";
+  if (/\b(bye|goodbye)\b/.test(low))   return "Goodbye — feel free to return anytime.";
+
+  if (/\b(how|what|why|explain|define|tell me|describe)\b/.test(low)) {
+    return `That's a great question! While I may not have specific details on **"${input}"**, I'm highly knowledgeable in:\n\n• **Technology** — AI, ML, Cloud, Java, Python, SQL, Cybersecurity, Blockchain\n• **Science** — Gravity, DNA, Photosynthesis, Solar System, Speed of Light\n• **Mathematics** — Pi, Pythagorean Theorem, Fibonacci, Algebra\n• **History** — World War II, Albert Einstein\n• **Writing** — Professional emails, Essay structure\n\nCould you rephrase or be more specific? I'll give you a thorough answer.`;
+  }
+
+  if (/\b(code|program|write|function|algorithm|implement)\b/.test(low)) {
+    return `I can help with coding! Supported languages and topics:\n\n\`\`\`\nJava · Python · JavaScript · SQL · C++\n\`\`\`\n\n**Try asking:**\n• "Write a Java program to find prime numbers"\n• "Python code for bubble sort"\n• "SQL query to find duplicate records"\n• "Explain recursion with an example"`;
+  }
+
+  return `I may not have specific details on **"${input}"** yet.\n\nI can answer questions on Technology, Science, Mathematics, History, Geography, and Writing.\n\nTry asking something more specific — I'll give you a detailed, accurate answer.`;
+}
+
+// ══ STATE ══
+let sessions = [], activeId = null, chatHistory = [], sidebarOpen = true;
+
+// ══ TIME ══
+const clock = () => new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+
+// ══ WELCOME ══
+function showWelcome() {
+  document.getElementById('msgsInner').innerHTML = `
+    <div class="welcome">
+      <div class="welcome-icon">A</div>
+      <h1>How can I <em>help</em> you?</h1>
+      <p class="welcome-sub">I'm Aura, an intelligent AI assistant. Ask me about technology, science, mathematics, history, or writing — I'll give you a thorough, instant answer.</p>
+      <div class="card-row">
+        <div class="prompt-card" onclick="quickAsk('Explain artificial intelligence and machine learning')">
+          <div class="pc-icon">🧠</div>
+          <div class="pc-title">Artificial Intelligence</div>
+          <div class="pc-sub">AI, ML, Deep Learning, NLP</div>
+        </div>
+        <div class="prompt-card" onclick="quickAsk('What is SQL injection and how do I prevent it?')">
+          <div class="pc-icon">🔐</div>
+          <div class="pc-title">Cybersecurity</div>
+          <div class="pc-sub">SQL injection, encryption, threats</div>
+        </div>
+        <div class="prompt-card" onclick="quickAsk('What is cloud computing? Explain IaaS PaaS SaaS')">
+          <div class="pc-icon">☁️</div>
+          <div class="pc-title">Cloud Computing</div>
+          <div class="pc-sub">AWS, Azure, GCP, deployment</div>
+        </div>
+        <div class="prompt-card" onclick="quickAsk('Write a professional email requesting a project meeting')">
+          <div class="pc-icon">✍️</div>
+          <div class="pc-title">Writing Assistant</div>
+          <div class="pc-sub">Emails, essays, reports</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ══ FORMAT ══
+function format(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^## (.+)$/gm,'<h3>$1</h3>')
+    .replace(/```[\w]*\n?([\s\S]*?)```/g,'<pre>$1</pre>')
+    .replace(/`([^`\n]+)`/g,'<code>$1</code>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+// ══ ADD MESSAGE ══
+function addMsg(text, isUser) {
+  const el = document.getElementById('msgsInner');
+  const welcome = el.querySelector('.welcome');
+  if (welcome) welcome.remove();
+
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (isUser ? ' user' : '');
+  row.innerHTML = `
+    <div class="msg-av ${isUser ? 'user' : 'ai'}">${isUser ? 'N' : 'A'}</div>
+    <div class="msg-content">
+      <div class="msg-meta">
+        <span class="msg-name">${isUser ? 'You' : 'Aura AI'}</span>
+        <span class="msg-time">${clock()}</span>
+        ${!isUser ? '<span class="msg-nlp-tag">NLP · Retrieval</span>' : ''}
+      </div>
+      <div class="msg-text">${isUser
+        ? text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        : format(text)
+      }</div>
+      ${!isUser ? `
+      <div class="msg-actions">
+        <button class="msg-act" onclick="copyMsg(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button class="msg-act" onclick="regenerate()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Regenerate
+        </button>
+      </div>` : ''}
+    </div>`;
+  el.appendChild(row);
+  document.getElementById('msgsScroll').scrollTop = 99999;
+}
+
+function copyMsg(btn) {
+  const t = btn.closest('.msg-content').querySelector('.msg-text').innerText;
+  navigator.clipboard.writeText(t).then(() => {
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy`, 2000);
+  });
+}
+
+function regenerate() {
+  if (chatHistory.length < 2) return;
+  const lastUser = chatHistory[chatHistory.length - 2]?.content;
+  chatHistory = chatHistory.slice(0, -2);
+  const rows = document.querySelectorAll('.msg-row');
+  if (rows.length >= 2) { rows[rows.length-1].remove(); rows[rows.length-2].remove(); }
+  processMsg(lastUser);
+}
+
+// ══ TYPING ══
+function setTyping(on) {
+  document.getElementById('typingBar').style.display = on ? 'flex' : 'none';
+  document.getElementById('msgsScroll').scrollTop = 99999;
+}
+
+// ══ SIDEBAR ══
+function toggleSidebar() {
+  sidebarOpen = !sidebarOpen;
+  document.getElementById('sidebar').classList.toggle('hidden', !sidebarOpen);
+}
+
+// ══ HISTORY ══
+function renderHistory(filter = '') {
+  const el = document.getElementById('historyList');
+  const list = sessions.filter(s => s.title.toLowerCase().includes(filter.toLowerCase()));
+  if (!list.length) {
+    el.innerHTML = '<div class="no-history">No conversations yet.<br>Begin a new chat.</div>';
+    return;
+  }
+  el.innerHTML = list.map(s => `
+    <div class="h-entry${activeId === s.id ? ' active' : ''}" onclick="loadSession(${s.id})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      ${s.title}
+    </div>`).join('');
+}
+
+function saveSession(firstMsg) {
+  const title = firstMsg.substring(0, 36) + (firstMsg.length > 36 ? '…' : '');
+  const id = Date.now();
+  sessions.unshift({ id, title, history: [...chatHistory] });
+  activeId = id;
+  renderHistory();
+}
+
+function loadSession(id) {
+  const s = sessions.find(x => x.id === id);
+  if (!s) return;
+  activeId = id;
+  chatHistory = [...s.history];
+  document.getElementById('msgsInner').innerHTML = '';
+  chatHistory.forEach(h => addMsg(h.content, h.role === 'user'));
+  renderHistory();
+}
+
+function filterHistory(v) { renderHistory(v); }
+
+function newChat() {
+  if (chatHistory.length > 0) saveSession(chatHistory[0].content);
+  chatHistory = []; activeId = null;
+  showWelcome();
+  document.getElementById('searchInput').value = '';
+  renderHistory();
+}
+
+// ══ SEND ══
+async function processMsg(text) {
+  document.getElementById('sendBtn').disabled = true;
+  setTyping(true);
+
+  const delay = 480 + Math.random() * 750;
+  await new Promise(r => setTimeout(r, delay));
+
+  const result = retrieve(text);
+  chatHistory.push({ role: 'assistant', content: result.text });
+  setTyping(false);
+  addMsg(result.text, false);
+
+  if (chatHistory.length === 2) saveSession(chatHistory[0].content);
+  if (chatHistory.length > 24) chatHistory = chatHistory.slice(-24);
+
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('msgInput').focus();
+}
+
+async function send() {
+  const inp = document.getElementById('msgInput');
+  const msg = inp.value.trim();
+  if (!msg) return;
+
+  addMsg(msg, true);
+  chatHistory.push({ role: 'user', content: msg });
+  inp.value = ''; inp.style.height = 'auto';
+
+  await processMsg(msg);
+}
+
+async function quickAsk(text) {
+  document.getElementById('msgInput').value = text;
+  await send();
+}
+
+function onKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+}
+
+function grow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 150) + 'px';
+}
+
+// ══ INIT ══
+showWelcome();
+</script>
+</body>
+</html>
